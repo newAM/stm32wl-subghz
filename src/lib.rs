@@ -10,6 +10,7 @@ mod packet_params;
 mod packet_type;
 mod reg_mode;
 mod rf_frequency;
+mod rx_timeout_stop;
 mod standby_clk;
 mod status;
 mod tcxo_mode;
@@ -25,6 +26,7 @@ pub use packet_params::{AddrComp, CrcType, GenericPacketParams, PayloadType, PbD
 pub use packet_type::PacketType;
 pub use reg_mode::RegMode;
 pub use rf_frequency::RfFreq;
+pub use rx_timeout_stop::RxTimeoutStop;
 pub use standby_clk::StandbyClk;
 pub use status::{CmdStatus, Status, StatusMode};
 pub use tcxo_mode::{TcxoMode, TcxoTrim};
@@ -614,6 +616,29 @@ impl SubGhz {
         self.write(&[OpCode::SetTxParams as u8, power, ramp_time.into()])
     }
 
+    /// Allows selection of the receiver event which stops the RX timeout timer.
+    ///
+    /// # Example
+    ///
+    /// Set the RX timeout timer to stop on preamble detection.
+    ///
+    /// ```no_run
+    /// # let mut sg = unsafe { subghz::SubGhz::conjure() };
+    /// use subghz::RxTimeoutStop;
+    ///
+    /// sg.set_rx_timeout_stop(RxTimeoutStop::Preamble)?;
+    /// # Ok::<(), subghz::SubGhzError>(())
+    /// ```
+    pub fn set_rx_timeout_stop(
+        &mut self,
+        rx_timeout_stop: RxTimeoutStop,
+    ) -> Result<(), SubGhzError> {
+        self.write(&[
+            OpCode::SetStopRxTimerOnPreamble as u8,
+            rx_timeout_stop as u8,
+        ])
+    }
+
     /// Set the (G)FSK modulation parameters.
     ///
     /// # Example
@@ -680,6 +705,30 @@ impl SubGhz {
         let tobits: u32 = timeout.as_bits();
         self.write(&[
             crate::OpCode::SetTx as u8,
+            ((tobits >> 16) & 0xFF) as u8,
+            ((tobits >> 8) & 0xFF) as u8,
+            (tobits & 0xFF) as u8,
+        ])
+    }
+
+    /// Set the sub-GHz radio in RX mode.
+    ///
+    /// # Example
+    ///
+    /// Receive with a 1 second timeout.
+    ///
+    /// ```no_run
+    /// # let mut sg = unsafe { subghz::SubGhz::conjure() };
+    /// use core::time::Duration;
+    /// use subghz::Timeout;
+    ///
+    /// sg.set_rx(&Timeout::from_duration_sat(Duration::from_secs(1)))?;
+    /// # Ok::<(), subghz::SubGhzError>(())
+    /// ```
+    pub fn set_rx(&mut self, timeout: &Timeout) -> Result<(), SubGhzError> {
+        let tobits: u32 = timeout.as_bits();
+        self.write(&[
+            crate::OpCode::SetRx as u8,
             ((tobits >> 16) & 0xFF) as u8,
             ((tobits >> 8) & 0xFF) as u8,
             (tobits & 0xFF) as u8,
