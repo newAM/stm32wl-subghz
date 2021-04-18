@@ -130,14 +130,14 @@ impl TcxoMode {
     ///
     /// // 15.625 ms timeout
     /// const TIMEOUT: Timeout = Timeout::from_duration_sat(Duration::from_millis(15_625));
-    /// const TCXO_MODE: TcxoMode = TcxoMode::new().set_timeout(&TIMEOUT);
+    /// const TCXO_MODE: TcxoMode = TcxoMode::new().set_timeout(TIMEOUT);
     /// # assert_eq!(TCXO_MODE.as_slice()[2], 0x0F);
     /// # assert_eq!(TCXO_MODE.as_slice()[3], 0x42);
     /// # assert_eq!(TCXO_MODE.as_slice()[4], 0x40);
     /// ```
     #[must_use = "set_timeout returns a new TcxoMode"]
-    pub const fn set_timeout(mut self, timeout: &Timeout) -> TcxoMode {
-        let timeout_bits: u32 = timeout.as_bits();
+    pub const fn set_timeout(mut self, timeout: Timeout) -> TcxoMode {
+        let timeout_bits: u32 = timeout.into_bits();
         self.buf[2] = ((timeout_bits >> 16) & 0xFF) as u8;
         self.buf[3] = ((timeout_bits >> 8) & 0xFF) as u8;
         self.buf[4] = (timeout_bits & 0xFF) as u8;
@@ -153,7 +153,7 @@ impl TcxoMode {
     ///
     /// const TCXO_MODE: TcxoMode = TcxoMode::new()
     ///     .set_txco_trim(TcxoTrim::Volts1pt7)
-    ///     .set_timeout(&Timeout::from_bits(0x123456));
+    ///     .set_timeout(Timeout::from_bits(0x123456));
     /// assert_eq!(TCXO_MODE.as_slice(), &[0x97, 0x1, 0x12, 0x34, 0x56]);
     /// ```
     pub const fn as_slice(&self) -> &[u8] {

@@ -14,8 +14,8 @@ fn rounding() {
     const NANO1: Duration = Duration::from_nanos(1);
     let res_sub_1_ns: Duration = Timeout::RESOLUTION - NANO1;
     let res_add_1_ns: Duration = Timeout::RESOLUTION + NANO1;
-    assert_eq!(Timeout::from_duration_sat(res_sub_1_ns).as_bits(), 1);
-    assert_eq!(Timeout::from_duration_sat(res_add_1_ns).as_bits(), 1);
+    assert_eq!(Timeout::from_duration_sat(res_sub_1_ns).into_bits(), 1);
+    assert_eq!(Timeout::from_duration_sat(res_add_1_ns).into_bits(), 1);
 }
 
 #[test]

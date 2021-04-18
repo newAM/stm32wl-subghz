@@ -301,7 +301,7 @@ impl SubGhz {
     ///
     /// const TCXO_MODE: TcxoMode = TcxoMode::new()
     ///     .set_txco_trim(TcxoTrim::Volts1pt7)
-    ///     .set_timeout(&Timeout::from_duration_sat(Duration::from_millis(10)));
+    ///     .set_timeout(Timeout::from_duration_sat(Duration::from_millis(10)));
     /// sg.set_tcxo_mode(&TCXO_MODE)?;
     /// # Ok::<(), subghz::SubGhzError>(())
     /// ```
@@ -698,11 +698,11 @@ impl SubGhz {
     /// # let mut sg = unsafe { subghz::SubGhz::conjure() };
     /// use subghz::Timeout;
     ///
-    /// sg.set_tx(&Timeout::DISABLED)?;
+    /// sg.set_tx(Timeout::DISABLED)?;
     /// # Ok::<(), subghz::SubGhzError>(())
     /// ```
-    pub fn set_tx(&mut self, timeout: &Timeout) -> Result<(), SubGhzError> {
-        let tobits: u32 = timeout.as_bits();
+    pub fn set_tx(&mut self, timeout: Timeout) -> Result<(), SubGhzError> {
+        let tobits: u32 = timeout.into_bits();
         self.write(&[
             crate::OpCode::SetTx as u8,
             ((tobits >> 16) & 0xFF) as u8,
@@ -722,11 +722,11 @@ impl SubGhz {
     /// use core::time::Duration;
     /// use subghz::Timeout;
     ///
-    /// sg.set_rx(&Timeout::from_duration_sat(Duration::from_secs(1)))?;
+    /// sg.set_rx(Timeout::from_duration_sat(Duration::from_secs(1)))?;
     /// # Ok::<(), subghz::SubGhzError>(())
     /// ```
-    pub fn set_rx(&mut self, timeout: &Timeout) -> Result<(), SubGhzError> {
-        let tobits: u32 = timeout.as_bits();
+    pub fn set_rx(&mut self, timeout: Timeout) -> Result<(), SubGhzError> {
+        let tobits: u32 = timeout.into_bits();
         self.write(&[
             crate::OpCode::SetRx as u8,
             ((tobits >> 16) & 0xFF) as u8,

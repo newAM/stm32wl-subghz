@@ -49,7 +49,7 @@ impl Timeout {
     /// use subghz::Timeout;
     ///
     /// const TIMEOUT: Timeout = Timeout::MIN;
-    /// assert_eq!(TIMEOUT.as_bits(), 1);
+    /// assert_eq!(TIMEOUT.into_bits(), 1);
     /// ```
     pub const MIN: Timeout = Timeout { bits: 1 };
 
@@ -187,7 +187,7 @@ impl Timeout {
     ///     Timeout::from_duration_sat(Duration::from_nanos(DURATION_MAX_NS)),
     ///     Timeout::MAX
     /// );
-    /// assert_eq!(Timeout::from_duration_sat(Timeout::RESOLUTION).as_bits(), 1);
+    /// assert_eq!(Timeout::from_duration_sat(Timeout::RESOLUTION).into_bits(), 1);
     /// ```
     pub const fn from_duration_sat(duration: Duration) -> Timeout {
         // developers note: at the time of development many methods in
@@ -284,10 +284,10 @@ impl Timeout {
     /// ```
     /// use subghz::Timeout;
     ///
-    /// assert_eq!(Timeout::from_bits(u32::MAX).as_bits(), 0x00FF_FFFF);
-    /// assert_eq!(Timeout::from_bits(1).as_bits(), 1);
+    /// assert_eq!(Timeout::from_bits(u32::MAX).into_bits(), 0x00FF_FFFF);
+    /// assert_eq!(Timeout::from_bits(1).into_bits(), 1);
     /// ```
-    pub const fn as_bits(&self) -> u32 {
+    pub const fn into_bits(self) -> u32 {
         self.bits
     }
 }
