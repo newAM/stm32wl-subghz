@@ -2,6 +2,7 @@
 //! 150 - 960 MHz ISM band.
 #![cfg_attr(not(test), no_std)]
 
+mod calibrate_image;
 mod irq;
 mod mod_params;
 mod ocp;
@@ -17,6 +18,7 @@ mod tcxo_mode;
 mod timeout;
 mod value_error;
 
+pub use calibrate_image::CalibrateImage;
 pub use irq::{CfgDioIrq, Irq, IrqLine};
 pub use mod_params::{CodingRate, LoRaBandwidth, LoRaModParams, SpreadingFactor};
 pub use mod_params::{GfskBandwidth, GfskBitrate, GfskFdev, GfskModParams, GfskPulseShape};
@@ -686,6 +688,26 @@ impl SubGhz {
     /// ```
     pub fn set_lora_mod_params(&mut self, params: &LoRaModParams) -> Result<(), SubGhzError> {
         self.write(params.as_slice())
+    }
+
+    /// Calibrate the image at the given frequencies.
+    ///
+    /// Requires the radio to be in standby mode.
+    ///
+    /// # Example
+    ///
+    /// Calibrate the image for the 430 - 440 MHz ISM band.
+    ///
+    /// ```no_run
+    /// # let mut sg = unsafe { subghz::SubGhz::conjure() };
+    /// use subghz::{CalibrateImage, StandbyClk};
+    ///
+    /// sg.set_standby(StandbyClk::Rc)?;
+    /// sg.calibrate_image(CalibrateImage::ISM_430_440)?;
+    /// # Ok::<(), subghz::SubGhzError>(())
+    /// ```
+    pub fn calibrate_image(&mut self, cal: CalibrateImage) -> Result<(), SubGhzError> {
+        self.write(&[OpCode::CalibrateImage as u8, cal.0, cal.1])
     }
 
     /// Set the sub-GHz radio in TX mode.

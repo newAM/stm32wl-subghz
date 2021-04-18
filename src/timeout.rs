@@ -187,7 +187,10 @@ impl Timeout {
     ///     Timeout::from_duration_sat(Duration::from_nanos(DURATION_MAX_NS)),
     ///     Timeout::MAX
     /// );
-    /// assert_eq!(Timeout::from_duration_sat(Timeout::RESOLUTION).into_bits(), 1);
+    /// assert_eq!(
+    ///     Timeout::from_duration_sat(Timeout::RESOLUTION).into_bits(),
+    ///     1
+    /// );
     /// ```
     pub const fn from_duration_sat(duration: Duration) -> Timeout {
         // developers note: at the time of development many methods in
