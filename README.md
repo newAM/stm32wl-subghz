@@ -7,7 +7,6 @@ This is a **work in progress**, it is unstable, incomplete, and untested.
 **Use at your own risk.**
 
 There should be enough code for very basic LoRa or GFSK TX.
-APIs do not yet exist for RX.
 
 ## Why upload incomplete code?
 

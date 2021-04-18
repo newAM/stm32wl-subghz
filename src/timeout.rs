@@ -13,12 +13,14 @@ const fn abs_diff(a: u64, b: u64) -> u64 {
 /// Timeout argument.
 ///
 /// This is used by:
-/// * [`TcxoMode`]
+/// * [`set_rx`]
 /// * [`set_tx`]
+/// * [`TcxoMode`]
 ///
 /// Each timeout has 3 bytes, with a resolution of 15.625µs per bit, giving a
 /// range of 0s to 262.143984375s.
 ///
+/// [`set_rx`]: crate::SubGhz::set_rx
 /// [`set_tx`]: crate::SubGhz::set_tx
 /// [`TcxoMode`]: crate::TcxoMode
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Hash)]

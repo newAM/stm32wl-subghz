@@ -580,6 +580,22 @@ impl SubGhz {
         Ok(())
     }
 
+    pub fn read_buffer(&mut self, offset: u8, buf: &mut [u8]) -> Result<Status, SubGhzError> {
+        let dp = unsafe { pac::Peripherals::steal() };
+        let pwr = &dp.PWR;
+        self.poll_not_busy();
+
+        pwr.subghzspicr.write(|w| w.nss().clear_bit());
+        self.write_byte_raw(OpCode::WriteBuffer as u8);
+        self.write_byte_raw(offset);
+        let status: Status = self.read_byte_raw().into();
+        buf.iter_mut().for_each(|b| *b = self.read_byte_raw());
+        pwr.subghzspicr.write(|w| w.nss().set_bit());
+
+        self.poll_not_busy();
+        Ok(status)
+    }
+
     pub fn set_packet_params(&mut self, params: &GenericPacketParams) -> Result<(), SubGhzError> {
         self.write(params.as_slice())
     }
