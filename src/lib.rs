@@ -600,10 +600,8 @@ impl SubGhz {
         self.write(params.as_slice())
     }
 
-    /// # Panics
-    /// Panics if `sync_word` is
+    /// Set the synchronization word registers.
     pub fn set_sync_word(&mut self, sync_word: [u8; 8]) -> Result<(), SubGhzError> {
-        assert!(sync_word.len() <= 8);
         self.write_register(Register::GSYNC7, &sync_word)
     }
 
