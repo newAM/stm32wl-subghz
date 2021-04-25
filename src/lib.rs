@@ -63,8 +63,8 @@ impl SubGhz {
     /// use subghz::SubGhz;
     ///
     /// let dp: pac::Peripherals = pac::Peripherals::take().unwrap();
-    /// let rcc = &dp.RCC;
-    /// let pwr = &dp.PWR;
+    /// let mut rcc = dp.RCC;
+    /// let pwr = dp.PWR;
     ///
     /// // ... setup the HSE to your liking
     ///
@@ -73,9 +73,9 @@ impl SubGhz {
     /// pwr.subghzspicr.write(|w| w.nss().clear_bit());
     /// pwr.subghzspicr.write(|w| w.nss().set_bit());
     ///
-    /// let sg = SubGhz::new(dp.SPI3, rcc);
+    /// let sg = SubGhz::new(dp.SPI3, &mut rcc);
     /// ```
-    pub fn new(spi: pac::SPI3, rcc: &pac::RCC) -> SubGhz {
+    pub fn new(spi: pac::SPI3, rcc: &mut pac::RCC) -> SubGhz {
         rcc.apb3rstr.write(|w| w.subghzspirst().set_bit());
         rcc.apb3rstr.write(|w| w.subghzspirst().clear_bit());
 
