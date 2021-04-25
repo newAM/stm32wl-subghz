@@ -1,3 +1,5 @@
+Archived in favour of [newAM/stm32wl-hal](https://github.com/newAM/stm32wl-hal).
+
 # STM32WL-SUBGHZ
 
 Embedded rust driver for the STM32WL sub-GHz radio.
